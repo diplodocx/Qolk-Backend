@@ -7,7 +7,34 @@ def get_products():
     conn = connect()
     cur = conn.cursor()
     select_statement = f"""
-                    SELECT * FROM products;
+                    SELECT * FROM products
+                    ORDER BY product_id;
+                    """
+    cur.execute(select_statement)
+    res = cur.fetchall()
+    conn.close()
+    return res
+
+
+def get_disposed_products():
+    conn = connect()
+    cur = conn.cursor()
+    select_statement = f"""
+                    SELECT * FROM Disposedproducts
+                    ORDER BY disposed_product_id;
+                    """
+    cur.execute(select_statement)
+    res = cur.fetchall()
+    conn.close()
+    return res
+
+
+def get_orders():
+    conn = connect()
+    cur = conn.cursor()
+    select_statement = f"""
+                    SELECT * FROM Orders
+                    ORDER BY order_id;
                     """
     cur.execute(select_statement)
     res = cur.fetchall()
@@ -32,3 +59,30 @@ def create_product(product: sc.ProductsModel):
     conn.commit()
     conn.close()
 
+
+def update_order_status(order_id: int):
+    conn = connect()
+    cur = conn.cursor()
+    update_statement = f"""
+                UPDATE orders 
+                SET end_date = TO_TIMESTAMP(TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS')
+                WHERE order_id = %s;             
+        """
+
+    cur.execute(update_statement, (order_id, ))
+    conn.commit()
+    conn.close()
+
+
+def update_product_status(product_id: int, status: bool):
+    conn = connect()
+    cur = conn.cursor()
+    update_statement = f"""
+                UPDATE Products 
+                SET is_written_off = %s
+                WHERE product_id = %s;             
+        """
+
+    cur.execute(update_statement, (status, product_id))
+    conn.commit()
+    conn.close()

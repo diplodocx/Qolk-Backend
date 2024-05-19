@@ -87,3 +87,7 @@ class MovementsModel(BaseModel):
     product_id: int
     source_zone: int
     target_zone: int
+
+
+class UpdateProductStatus(BaseModel):
+    new_status: bool
