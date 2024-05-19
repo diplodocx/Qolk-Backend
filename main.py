@@ -42,7 +42,7 @@ def read_orders(product_id: int, new_status: sc.UpdateProductStatus = Depends())
     return res
 
 
-@app.post("/add_product/{machine_id}")
+@app.post("/change_device_state/{machine_id}")
 def set_product(machine_id: int, signal: sc.DeviceSignal = Depends()):
     res = send_message(machine_id, signal)
     return res
