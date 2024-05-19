@@ -121,7 +121,7 @@ def get_humidity():
     cur = conn.cursor()
     select_statement = f"""
              SELECT * FROM avg_humidity;          
-        """
+        """  # view
     cur.execute(select_statement)
     conn.commit()
     res = cur.fetchall()
