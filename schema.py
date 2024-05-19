@@ -91,3 +91,7 @@ class MovementsModel(BaseModel):
 
 class UpdateProductStatus(BaseModel):
     new_status: bool
+
+
+class DeviceSignal(BaseModel):
+    signal: bool

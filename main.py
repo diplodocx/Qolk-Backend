@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 import queries as db
 import schema as sc
+from mqtt_requests import send_message
 
 app = FastAPI()
 
@@ -38,4 +39,10 @@ def read_orders(order_id: int):
 @app.patch("/update_product_status/{product_id}")
 def read_orders(product_id: int, new_status: sc.UpdateProductStatus = Depends()):
     res = db.update_product_status(product_id, new_status.new_status)
+    return res
+
+
+@app.post("/add_product/{machine_id}")
+def set_product(machine_id: int, signal: sc.DeviceSignal = Depends()):
+    res = send_message(machine_id, signal)
     return res
