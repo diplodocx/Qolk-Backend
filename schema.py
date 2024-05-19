@@ -33,9 +33,8 @@ class ProductsModel(BaseModel):
     storage_zone: int = 1
     storage_stage: int = 1
     initial_cable_material: str = 'test'
-    initial_cable_length: float = 0.0
+    initial_cable_quantity: int = 0
     initial_cable_diameter: float = 0.0
-    product_size: float = 0.0
 
 
 class DisposedProductsModel(BaseModel):
@@ -47,7 +46,7 @@ class DisposedProductsModel(BaseModel):
     report_date: datetime
     storage_change_date: datetime
     cable_material: str
-    cable_length: float
+    cable_quantity: int
     cable_diameter: float
     disposal_reason: str
 
@@ -60,7 +59,7 @@ class OrdersModel(BaseModel):
     start_date: datetime
     end_date: datetime
     order_cable_material: str
-    order_cable_length: float
+    order_cable_quantity: int
     order_cable_diameter: float
 
 
@@ -91,6 +90,10 @@ class MovementsModel(BaseModel):
 
 class UpdateProductStatus(BaseModel):
     new_status: bool
+
+
+class UpdateProductZone(BaseModel):
+    new_zone: int
 
 
 class DeviceSignal(BaseModel):

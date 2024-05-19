@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Depends
 import queries as db
 import schema as sc
-from mqtt_requests import send_message
+from sender import bot
+from config import L_CHAT
 
 app = FastAPI()
 
@@ -18,9 +19,10 @@ def read_disposed_products():
     return res
 
 
-@app.post("/add_product")
-def set_product(product: sc.ProductsModel = Depends()):
+@app.post("/add_product/{zone}")
+def set_product(zone: int, product: sc.ProductsModel = Depends()):
     res = db.create_product(product)
+    bot.send_message(L_CHAT, f'Поместите товар {product.product_id}, {product.name} из зоны 1 в зону {zone}')
     return res
 
 
@@ -36,13 +38,17 @@ def read_orders(order_id: int):
     return res
 
 
-@app.patch("/update_product_status/{product_id}")
+@app.patch("/utilize_product/{product_id}")
 def read_orders(product_id: int, new_status: sc.UpdateProductStatus = Depends()):
     res = db.update_product_status(product_id, new_status.new_status)
+    product = db.get_product(product_id)
+    bot.send_message(L_CHAT, f'Поместите товар {product_id}, {product[0]} из зоны {product[1]} в зону утилизации')
     return res
 
 
-@app.post("/change_device_state/{machine_id}")
-def set_product(machine_id: int, signal: sc.DeviceSignal = Depends()):
-    res = send_message(machine_id, signal)
+@app.patch("/update_product_zone/{product_id}")
+def read_orders(product_id: int, new_zone: sc.UpdateProductZone = Depends()):
+    res = db.update_product_zone(product_id, new_zone.new_zone)
+    product = db.get_product(product_id)
+    bot.send_message(L_CHAT, f'Поместите товар {product_id}, {product[0]} из зоны {product[1]} в зону {new_zone.new_zone}')
     return res
